@@ -19,7 +19,12 @@
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0"
+    "@electron-toolkit/utils": "^3.0.0",
+    "@mdi/font": "^7.4.47",
+    "better-sqlite3": "^11.8.1",
+    "bootstrap": "^5.3.3",
+    "vue-router": "^4.5.0",
+    "vuetify": "^3.7.12"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^1.0.2",

@@ -1,7 +1,8 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon_berges.png'
+import registerIpcHandlers from './ipc/index.js';
 
 function createWindow() {
   // Create the browser window.
@@ -13,13 +14,15 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false
     }
   })
 
- // mainWindow.on('ready-to-show', () => {
-    //mainWindow.show()
- // })
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show()
+  })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -51,6 +54,8 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  registerIpcHandlers(); // Enregistrement automatique des handlers IPC
 
   createWindow()
 
