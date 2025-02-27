@@ -1,9 +1,10 @@
-import db from '../../../database.js'
+//import db from '../../../database.js'
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 const AgentService = {
   async getAgents() {
-    const query = db.prepare('SELECT * FROM agents')
-    return query.all()
+    return prisma.agent.findMany();
   },
   async getAgentsByCompanie(companieId) {
     const query = db.prepare('SELECT * FROM agents WHERE companie_id=?')

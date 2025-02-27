@@ -1,14 +1,16 @@
-import { ipcMain } from 'electron'
-import db from '../../../database.js'
+//import db from '../../../database.js'
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 const CompanieService = {
   async getCompanies() {
-    const query = db.prepare('SELECT * FROM companies')
-    return query.all()
+    return prisma.company.findMany()
   },
   async getCompanieAnnexes(companieId) {
-    const query = db.prepare('SELECT * FROM annexes WHERE companie_id=?')
-    return query.all([companieId])
+    return prisma.company.findUnique({
+      where: { id: companieId },
+      include: { annexes: true }
+    })
   }
 }
 

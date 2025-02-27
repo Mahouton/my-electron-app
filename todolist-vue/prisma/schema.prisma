@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  address     String?
+  description String?
+  acronym     String?  @unique
+  email       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  annexes     Annexe[]
+  agents      Agent[]
+  invoices    Invoice[]
+}
+
+model Annexe {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  companyId  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  agents     Agent[]
+  invoices   Invoice[]
+}
+
+model Agent {
+  id                 Int      @id @default(autoincrement())
+  lastname           String
+  firstname          String
+  registrationNumber String   @unique
+  companyId         Int
+  annexeId         Int?
+  hiringDate        DateTime
+  salary           Decimal
+  status          String   @default("active")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  annexe         Annexe?  @relation(fields: [annexeId], references: [id], onDelete: SetNull)
+}
+
+model Invoice {
+  id                     Int      @id @default(autoincrement())
+  number                 String   @unique
+  dateEmission           DateTime
+  monthConcern           String
+  companyId             Int
+  annexeId             Int?
+  numberAgents          Int
+  costServiceExclTax    Decimal
+  commissionAmount      Decimal
+  aib                   Decimal
+  tva                   Decimal
+  costServiceInclTax    Decimal
+  salariesToPay         Decimal
+  totalAmountToTransfer Decimal
+  netAmountToTransfer   Decimal
+  status                String   @default("draft")
+  observations          String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  annexe    Annexe?  @relation(fields: [annexeId], references: [id], onDelete: SetNull)
+}
